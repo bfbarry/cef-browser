@@ -68,6 +68,9 @@ void SimpleHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 
   // Add to the list of existing browsers.
   browser_list_.push_back(browser);
+  
+  // Show the main window after browser is created
+  ShowMainWindow();
 }
 
 bool SimpleHandler::DoClose(CefRefPtr<CefBrowser> browser) {
@@ -171,6 +174,7 @@ void SimpleHandler::CloseAllBrowsers(bool force_close) {
     (*it)->GetHost()->CloseBrowser(force_close);
   }
 }
+
 
 #if !defined(OS_MAC)
 void SimpleHandler::PlatformShowWindow(CefRefPtr<CefBrowser> browser) {

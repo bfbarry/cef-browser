@@ -48,6 +48,10 @@ class SimpleHandler : public CefClient,
 
   bool IsClosing() const { return is_closing_; }
 
+  //custom
+  void OnAddressChange(CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    const CefString& url) override;
  private:
   // Platform-specific implementation.
   void PlatformTitleChange(CefRefPtr<CefBrowser> browser,
@@ -65,6 +69,10 @@ class SimpleHandler : public CefClient,
 
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(SimpleHandler);
+  
+  //custom
+  void GoBack(CefRefPtr<CefBrowser> browser);
+  void GoForward(CefRefPtr<CefBrowser> browser);
 };
 
 #endif  // CEF_examples_myproject_SIMPLE_HANDLER_H_

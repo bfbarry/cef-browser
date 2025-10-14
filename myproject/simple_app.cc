@@ -108,11 +108,8 @@ void SimpleApp::OnContextInitialized() {
       CefCommandLine::GetGlobalCommandLine();
 
   // Check if Alloy style will be used.
-  cef_runtime_style_t runtime_style = CEF_RUNTIME_STYLE_DEFAULT;
-  bool use_alloy_style = command_line->HasSwitch("use-alloy-style");
-  if (use_alloy_style) {
-    runtime_style = CEF_RUNTIME_STYLE_ALLOY;
-  }
+  cef_runtime_style_t runtime_style = CEF_RUNTIME_STYLE_ALLOY;
+  bool use_alloy_style = true;
 
   // SimpleHandler implements browser-level callbacks.
   CefRefPtr<SimpleHandler> handler(new SimpleHandler(use_alloy_style));
@@ -122,12 +119,12 @@ void SimpleApp::OnContextInitialized() {
 
   std::string url;
 
-  // Check if a "--url=" value was provided via the command-line. If so, use
-  // that instead of the default URL.
+  // override init URL
   url = "file:///Users/brianbarry/Desktop/computing/cef-browser/myproject/index.html";
 
   // Views is enabled by default (add `--use-native` to disable).
-  const bool use_views = !command_line->HasSwitch("use-native");
+  // const bool use_views = !command_line->HasSwitch("use-native");
+  const bool use_views = false;
 
   // If using Views create the browser using the Views framework, otherwise
   // create the browser using the native platform framework.
