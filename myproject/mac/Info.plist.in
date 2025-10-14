@@ -7,9 +7,9 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>cefsimple.icns</string>
+	<string>myproject.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.cef.cefsimple</string>
+	<string>org.cef.myproject</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

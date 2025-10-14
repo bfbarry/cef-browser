@@ -2,8 +2,8 @@
 # reserved. Use of this source code is governed by a BSD-style license that
 # can be found in the LICENSE file.
 
-PRODUCT_NAME = "cefsimple"
-PKG_NAME = "//tests/{}".format(PRODUCT_NAME)
+PRODUCT_NAME = "myproject"
+PKG_NAME = "//examples/{}".format(PRODUCT_NAME)
 
 # Allow access from subpackages only.
 package(default_visibility = [
@@ -25,17 +25,17 @@ srcs_browser = [
 ]
 
 srcs_browser_linux = [
-    "cefsimple_linux.cc",
+    "myproject_linux.cc",
     "simple_handler_linux.cc"
 ]
 
 srcs_browser_mac = [
-    "cefsimple_mac.mm",
+    "myproject_mac.mm",
     "simple_handler_mac.mm"
 ]
 
 srcs_browser_win = [
-    "cefsimple_win.cc",
+    "myproject_win.cc",
     "resource.h",
     "simple_handler_win.cc"
 ]

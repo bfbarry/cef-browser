@@ -6,65 +6,65 @@
 # Source files.
 #
 
-# cefsimple sources.
-set(CEFSIMPLE_SRCS
+# myproject sources.
+set(myproject_SRCS
   simple_app.cc
   simple_app.h
   simple_handler.cc
   simple_handler.h
   )
-set(CEFSIMPLE_SRCS_LINUX
-  cefsimple_linux.cc
+set(myproject_SRCS_LINUX
+  myproject_linux.cc
   simple_handler_linux.cc
   )
-set(CEFSIMPLE_SRCS_MAC
-  cefsimple_mac.mm
+set(myproject_SRCS_MAC
+  myproject_mac.mm
   simple_handler_mac.mm
   )
-set(CEFSIMPLE_SRCS_WINDOWS
-  cefsimple_win.cc
+set(myproject_SRCS_WINDOWS
+  myproject_win.cc
   resource.h
   simple_handler_win.cc
   )
-APPEND_PLATFORM_SOURCES(CEFSIMPLE_SRCS)
-source_group(cefsimple FILES ${CEFSIMPLE_SRCS})
+APPEND_PLATFORM_SOURCES(myproject_SRCS)
+source_group(myproject FILES ${myproject_SRCS})
 
-set(CEFSIMPLE_WIN_SRCS_WINDOWS
-  win/cefsimple.rc
+set(myproject_WIN_SRCS_WINDOWS
+  win/myproject.rc
   )
-APPEND_PLATFORM_SOURCES(CEFSIMPLE_WIN_SRCS)
-source_group(cefsimple\\\\win FILES ${CEFSIMPLE_WIN_SRCS})
+APPEND_PLATFORM_SOURCES(myproject_WIN_SRCS)
+source_group(myproject\\\\win FILES ${myproject_WIN_SRCS})
 
-set(CEFSIMPLE_SRCS
-  ${CEFSIMPLE_SRCS}
-  ${CEFSIMPLE_WIN_SRCS}
+set(myproject_SRCS
+  ${myproject_SRCS}
+  ${myproject_WIN_SRCS}
   )
 
-# cefsimple helper sources.
-set(CEFSIMPLE_HELPER_SRCS_MAC
+# myproject helper sources.
+set(myproject_HELPER_SRCS_MAC
   process_helper_mac.cc
   )
-APPEND_PLATFORM_SOURCES(CEFSIMPLE_HELPER_SRCS)
-source_group(cefsimple FILES ${CEFSIMPLE_HELPER_SRCS})
+APPEND_PLATFORM_SOURCES(myproject_HELPER_SRCS)
+source_group(myproject FILES ${myproject_HELPER_SRCS})
 
-# cefsimple resources.
-set(CEFSIMPLE_RESOURCES_MAC_SRCS_MAC
+# myproject resources.
+set(myproject_RESOURCES_MAC_SRCS_MAC
   mac/Info.plist.in
-  mac/cefsimple.icns
+  mac/myproject.icns
   )
-APPEND_PLATFORM_SOURCES(CEFSIMPLE_RESOURCES_MAC_SRCS)
-source_group(cefsimple\\\\mac FILES ${CEFSIMPLE_RESOURCES_MAC_SRCS})
+APPEND_PLATFORM_SOURCES(myproject_RESOURCES_MAC_SRCS)
+source_group(myproject\\\\mac FILES ${myproject_RESOURCES_MAC_SRCS})
 
-set(CEFSIMPLE_RESOURCES_MAC_ENGLISH_LPROJ_SRCS_MAC
+set(myproject_RESOURCES_MAC_ENGLISH_LPROJ_SRCS_MAC
   mac/English.lproj/InfoPlist.strings
   mac/English.lproj/MainMenu.xib
   )
-APPEND_PLATFORM_SOURCES(CEFSIMPLE_RESOURCES_MAC_ENGLISH_LPROJ_SRCS)
-source_group(cefsimple\\\\mac\\\\English.lproj FILES ${CEFSIMPLE_RESOURCES_MAC_ENGLISH_LPROJ_SRCS})
+APPEND_PLATFORM_SOURCES(myproject_RESOURCES_MAC_ENGLISH_LPROJ_SRCS)
+source_group(myproject\\\\mac\\\\English.lproj FILES ${myproject_RESOURCES_MAC_ENGLISH_LPROJ_SRCS})
 
-set(CEFSIMPLE_RESOURCES_SRCS
-  ${CEFSIMPLE_RESOURCES_MAC_SRCS}
-  ${CEFSIMPLE_RESOURCES_MAC_ENGLISH_LPROJ_SRCS}
+set(myproject_RESOURCES_SRCS
+  ${myproject_RESOURCES_MAC_SRCS}
+  ${myproject_RESOURCES_MAC_ENGLISH_LPROJ_SRCS}
   )
 
 
@@ -73,10 +73,10 @@ set(CEFSIMPLE_RESOURCES_SRCS
 #
 
 # Target executable names.
-set(CEF_TARGET "cefsimple")
+set(CEF_TARGET "myproject")
 if(OS_MAC)
-  set(CEF_HELPER_TARGET "cefsimple_Helper")
-  set(CEF_HELPER_OUTPUT_NAME "cefsimple Helper")
+  set(CEF_HELPER_TARGET "myproject_Helper")
+  set(CEF_HELPER_OUTPUT_NAME "myproject Helper")
 else()
   # Logical target used to link the libcef library.
   ADD_LOGICAL_TARGET("libcef_lib" "${CEF_LIB_DEBUG}" "${CEF_LIB_RELEASE}")
@@ -92,7 +92,7 @@ SET_CEF_TARGET_OUT_DIR()
 
 if(OS_LINUX)
   # Executable target.
-  add_executable(${CEF_TARGET} ${CEFSIMPLE_SRCS})
+  add_executable(${CEF_TARGET} ${myproject_SRCS})
   SET_EXECUTABLE_TARGET_PROPERTIES(${CEF_TARGET})
   add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
   target_link_libraries(${CEF_TARGET} libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS})
@@ -137,7 +137,7 @@ if(OS_MAC)
   set(PRODUCT_NAME "${CEF_TARGET}")
 
   # Main app bundle target.
-  add_executable(${CEF_TARGET} MACOSX_BUNDLE ${CEFSIMPLE_RESOURCES_SRCS} ${CEFSIMPLE_SRCS})
+  add_executable(${CEF_TARGET} MACOSX_BUNDLE ${myproject_RESOURCES_SRCS} ${myproject_SRCS})
   SET_EXECUTABLE_TARGET_PROPERTIES(${CEF_TARGET})
   add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
   target_link_libraries(${CEF_TARGET} libcef_dll_wrapper ${CEF_STANDARD_LIBS})
@@ -172,7 +172,7 @@ if(OS_MAC)
     file(WRITE ${_helper_info_plist} ${_plist_contents})
 
     # Create Helper executable target.
-    add_executable(${_helper_target} MACOSX_BUNDLE ${CEFSIMPLE_HELPER_SRCS})
+    add_executable(${_helper_target} MACOSX_BUNDLE ${myproject_HELPER_SRCS})
     SET_EXECUTABLE_TARGET_PROPERTIES(${_helper_target})
     add_dependencies(${_helper_target} libcef_dll_wrapper)
     target_link_libraries(${_helper_target} libcef_dll_wrapper ${CEF_STANDARD_LIBS})
@@ -200,7 +200,7 @@ if(OS_MAC)
   # directive but that doesn't properly handle nested resource directories.
   # Remove these prefixes from input file paths.
   set(PREFIXES "mac/")
-  COPY_MAC_RESOURCES("${CEFSIMPLE_RESOURCES_SRCS}" "${PREFIXES}" "${CEF_TARGET}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CEF_APP}")
+  COPY_MAC_RESOURCES("${myproject_RESOURCES_SRCS}" "${PREFIXES}" "${CEF_TARGET}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CEF_APP}")
 endif()
 
 
@@ -211,7 +211,7 @@ endif()
 if(OS_WINDOWS)
   if(USE_SANDBOX)
     # Shared library (DLL) target.
-    add_library(${CEF_TARGET} SHARED ${CEFSIMPLE_SRCS})
+    add_library(${CEF_TARGET} SHARED ${myproject_SRCS})
     SET_LIBRARY_TARGET_PROPERTIES(${CEF_TARGET})
 
     # Copy and rename the bootstrap binary.
@@ -225,7 +225,7 @@ if(OS_WINDOWS)
     endif()
   else()
     # Executable target.
-    add_executable(${CEF_TARGET} WIN32 ${CEFSIMPLE_SRCS})
+    add_executable(${CEF_TARGET} WIN32 ${myproject_SRCS})
     SET_EXECUTABLE_TARGET_PROPERTIES(${CEF_TARGET})
 
     # Add the custom manifest files to the executable.

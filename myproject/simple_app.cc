@@ -2,7 +2,7 @@
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "tests/cefsimple/simple_app.h"
+#include "examples/myproject/simple_app.h"
 
 #include <string>
 
@@ -11,7 +11,7 @@
 #include "include/views/cef_browser_view.h"
 #include "include/views/cef_window.h"
 #include "include/wrapper/cef_helpers.h"
-#include "tests/cefsimple/simple_handler.h"
+#include "examples/myproject/simple_handler.h"
 
 namespace {
 
@@ -126,7 +126,7 @@ void SimpleApp::OnContextInitialized() {
   // that instead of the default URL.
   url = command_line->GetSwitchValue("url");
   if (url.empty()) {
-    url = "https://www.google.com";
+    url = "myproject/index.html";
   }
 
   // Views is enabled by default (add `--use-native` to disable).
@@ -166,7 +166,7 @@ void SimpleApp::OnContextInitialized() {
 #if defined(OS_WIN)
     // On Windows we need to specify certain flags that will be passed to
     // CreateWindowEx().
-    window_info.SetAsPopup(nullptr, "cefsimple");
+    window_info.SetAsPopup(nullptr, "myproject");
 #endif
 
     // Alloy style will create a basic native window. Chrome style will create a
