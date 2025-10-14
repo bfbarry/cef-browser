@@ -2,7 +2,7 @@
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
-#include "examples/myproject/simple_app.h"
+#include "simple_app.h"
 
 #include <string>
 
@@ -11,7 +11,7 @@
 #include "include/views/cef_browser_view.h"
 #include "include/views/cef_window.h"
 #include "include/wrapper/cef_helpers.h"
-#include "examples/myproject/simple_handler.h"
+#include "simple_handler.h"
 
 namespace {
 
@@ -124,10 +124,7 @@ void SimpleApp::OnContextInitialized() {
 
   // Check if a "--url=" value was provided via the command-line. If so, use
   // that instead of the default URL.
-  url = command_line->GetSwitchValue("url");
-  if (url.empty()) {
-    url = "myproject/index.html";
-  }
+  url = "file:///Users/brianbarry/Desktop/computing/cef-browser/myproject/index.html";
 
   // Views is enabled by default (add `--use-native` to disable).
   const bool use_views = !command_line->HasSwitch("use-native");

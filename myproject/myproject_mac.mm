@@ -9,8 +9,8 @@
 #include "include/cef_command_line.h"
 #include "include/wrapper/cef_helpers.h"
 #include "include/wrapper/cef_library_loader.h"
-#include "examples/myproject/simple_app.h"
-#include "examples/myproject/simple_handler.h"
+#include "simple_app.h"
+#include "simple_handler.h"
 
 // Receives notifications from the application.
 @interface SimpleAppDelegate : NSObject <NSApplicationDelegate>
