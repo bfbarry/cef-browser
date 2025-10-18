@@ -29,28 +29,6 @@
   return YES;
 }
 
-- (void)controlTextDidEndEditing:(NSNotification*)notification {
-  NSLog(@"controlTextDidEndEditing called");
-  NSTextField* textField = [notification object];
-  NSString* urlString = [textField stringValue];
-  NSLog(@"URL string: %@", urlString);
-  
-  if (browser_ && [urlString length] > 0) {
-    std::string url = [urlString UTF8String];
-    NSLog(@"Browser exists, processing URL: %s", url.c_str());
-    
-    // Add http:// if no protocol specified
-    if (url.find("://") == std::string::npos) {
-      url = "http://" + url;
-      NSLog(@"Added http:// prefix: %s", url.c_str());
-    }
-    
-    NSLog(@"Loading URL: %s", url.c_str());
-    browser_->GetMainFrame()->LoadURL(url);
-  } else {
-    NSLog(@"Browser is null or URL string is empty");
-  }
-}
 
 - (BOOL)control:(NSControl*)control textView:(NSTextView*)textView doCommandBySelector:(SEL)commandSelector {
   NSLog(@"doCommandBySelector called with selector: %@", NSStringFromSelector(commandSelector));
@@ -58,21 +36,11 @@
   if (commandSelector == @selector(insertNewline:)) {
     NSLog(@"Enter key pressed!");
     NSTextField* textField = (NSTextField*)control;
-    NSString* urlString = [textField stringValue];
-    NSLog(@"URL string: %@", urlString);
+    NSString* queryString = [textField stringValue];
+    NSLog(@"URL string: %@", queryString);
     
-    if (browser_ && [urlString length] > 0) {
-      std::string url = [urlString UTF8String];
-      NSLog(@"Browser exists, processing URL: %s", url.c_str());
-      
-      // Add http:// if no protocol specified
-      if (url.find("://") == std::string::npos) {
-        url = "http://" + url;
-        NSLog(@"Added http:// prefix: %s", url.c_str());
-      }
-      
-      NSLog(@"Loading URL: %s", url.c_str());
-      browser_->GetMainFrame()->LoadURL(url);
+    if (browser_ && [queryString length] > 0) {
+      [self performLookupWithQuery:queryString];
     } else {
       NSLog(@"Browser is null or URL string is empty");
     }
@@ -80,6 +48,62 @@
   }
   
   return NO;
+}
+
+- (void)performLookupWithQuery:(NSString*)queryString {
+  NSString* encodedQuery = [queryString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  NSString* urlString = [NSString stringWithFormat:@"http://localhost:1212/lookup?key=%@", encodedQuery];
+  NSURL* url = [NSURL URLWithString:urlString];
+  
+  NSLog(@"Making API call to: %@", urlString);
+  
+  NSURLSessionDataTask* task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
+    if (error) {
+      NSLog(@"API call failed: %@", error.localizedDescription);
+      [self handleLookupFailure:queryString];
+      return;
+    }
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    if (httpResponse.statusCode != 200) {
+      NSLog(@"API call returned status code: %ld", (long)httpResponse.statusCode);
+      [self handleLookupFailure:queryString];
+      return;
+    }
+    
+    NSString* result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"API response: %@", result);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self handleLookupSuccess:result originalQuery:queryString];
+    });
+  }];
+  
+  [task resume];
+}
+
+- (void)handleLookupSuccess:(NSString*)apiResult originalQuery:(NSString*)originalQuery {
+  if (browser_ && [apiResult length] > 0) {
+    std::string url = [apiResult UTF8String];
+    NSLog(@"Loading URL from API result: %s", url.c_str());
+    browser_->GetMainFrame()->LoadURL(url);
+  } else {
+    NSLog(@"API returned empty result, falling back to original query");
+    [self handleLookupFailure:originalQuery];
+  }
+}
+
+- (void)handleLookupFailure:(NSString*)originalQuery {
+  std::string query = [originalQuery UTF8String];
+  NSLog(@"Falling back to original query: %s", query.c_str());
+  
+  if (query.find("://") == std::string::npos) {
+    query = "http://" + query;
+    NSLog(@"Added http:// prefix: %s", query.c_str());
+  }
+  
+  NSLog(@"Loading URL: %s doCommandBySelector", query.c_str());
+  browser_->GetMainFrame()->LoadURL(query);
 }
 @end
 

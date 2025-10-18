@@ -120,7 +120,7 @@ void SimpleApp::OnContextInitialized() {
   std::string url;
 
   // override init URL
-  url = "file:///Users/brianbarry/Desktop/computing/cef-browser/myproject/index.html";
+  url = "file:///Users/brianbarry/Desktop/computing/nu-net/cef-browser/myproject/index.html";
 
   // Views is enabled by default (add `--use-native` to disable).
   // const bool use_views = !command_line->HasSwitch("use-native");
