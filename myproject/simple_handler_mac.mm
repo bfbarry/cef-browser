@@ -149,6 +149,20 @@ NSWindow* GetNSWindowForBrowser(CefRefPtr<CefBrowser> browser) {
   return [view window];
 }
 
+void UpdateNavigationButtons(NSWindow* window, CefRefPtr<CefBrowser> browser) {
+  NSView* contentView = [window contentView];
+  NSButton* backButton = [contentView viewWithTag:101];
+  NSButton* forwardButton = [contentView viewWithTag:102];
+  
+  if (backButton && forwardButton && browser) {
+    [backButton setEnabled:browser->CanGoBack()];
+    [forwardButton setEnabled:browser->CanGoForward()];
+    NSLog(@"Updated navigation buttons - Back: %@, Forward: %@", 
+          browser->CanGoBack() ? @"YES" : @"NO",
+          browser->CanGoForward() ? @"YES" : @"NO");
+  }
+}
+
 void AddToolbarToWindow(NSWindow* window, CefRefPtr<CefBrowser> browser) {
   NSLog(@"AddToolbarToWindow called");
   NSView* contentView = [window contentView];
@@ -184,20 +198,20 @@ void AddToolbarToWindow(NSWindow* window, CefRefPtr<CefBrowser> browser) {
   
   // Back button
   NSButton* backButton = [[NSButton alloc] initWithFrame:NSMakeRect(5, 5, 60, 30)];
-  [backButton setTitle:@"Back"];
+  [backButton setTitle:@"<"];
   [backButton setBezelStyle:NSBezelStyleRounded];
   [backButton setTarget:buttonHandler];
   [backButton setAction:@selector(goBack:)];
-  backButton.enabled = NO;
+  [backButton setTag:101]; // Tag to find it later
   [toolbarView addSubview:backButton];
   
   // Forward button
   NSButton* forwardButton = [[NSButton alloc] initWithFrame:NSMakeRect(70, 5, 60, 30)];
-  [forwardButton setTitle:@"Forward"];
+  [forwardButton setTitle:@">"];
   [forwardButton setBezelStyle:NSBezelStyleRounded];
   [forwardButton setTarget:buttonHandler];
   [forwardButton setAction:@selector(goForward:)];
-  forwardButton.enabled = NO;
+  [forwardButton setTag:102]; // Tag to find it later
   [toolbarView addSubview:forwardButton];
   
   // URL text field
@@ -226,6 +240,9 @@ void AddToolbarToWindow(NSWindow* window, CefRefPtr<CefBrowser> browser) {
   }
   
   [contentView addSubview:toolbarView];
+  
+  // Update button states after toolbar is created
+  UpdateNavigationButtons(window, browser);
 }
 
 }  // namespace
@@ -275,4 +292,7 @@ void SimpleHandler::OnAddressChange(CefRefPtr<CefBrowser> browser,
     std::string urlStr = url.ToString();
     [urlField setStringValue:[NSString stringWithUTF8String:urlStr.c_str()]];
   }
+  
+  // Update navigation button states
+  UpdateNavigationButtons(window, browser);
 }
